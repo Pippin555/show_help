@@ -1,0 +1,1 @@
+.\venv\scripts\python.exe filter_help.py -s "C:\temp\output" -t ".\help"
