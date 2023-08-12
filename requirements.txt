@@ -1,0 +1,5 @@
+comtypes==1.2.0
+jsons==1.6.3
+pywebview-unofficial-osx-patched==0.8.4
+pywin32==306
+typish==1.9.3

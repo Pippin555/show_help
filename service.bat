@@ -1,1 +1,1 @@
-.\venv\scripts\python.exe service.py
+.\venv\scripts\python.exe help_server.py
