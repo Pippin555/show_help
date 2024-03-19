@@ -19,6 +19,7 @@ from os.path import dirname
 from os.path import isdir
 from os.path import join
 from os.path import splitext
+from os.path import abspath
 from os.path import sep as _sep
 
 from re import compile as _compile
@@ -38,9 +39,9 @@ def main() -> int:
     for arg in iarg:
         match arg:
             case '-s':
-                source_path = next(iarg)
+                source_path = abspath(next(iarg))
             case '-t':
-                target_path = next(iarg)
+                target_path = abspath(next(iarg))
 
     assert source_path
     assert target_path

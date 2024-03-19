@@ -1,5 +1,4 @@
-comtypes==1.2.0
-jsons==1.6.3
-pywebview-unofficial-osx-patched==0.8.4
-pywin32==306
-typish==1.9.3
+PySide6==6.6.1
+PySide6-Addons==6.6.1
+PySide6-Essentials==6.6.1
+shiboken6==6.6.1
