@@ -7,6 +7,7 @@ __author__ = 'Sihir'  # noqa
 __copyright__ = '© Sihir 2023-2023 all rights reserved'  # noqa
 
 from sys import exit as _exit
+from sys import argv
 
 from os import walk
 from os import curdir
@@ -48,7 +49,9 @@ def make_dir(target: str):
 def main() -> int:
     """ main entry """
 
-    source = abspath(join(curdir, 'help'))
+    it_args = iter(argv[1:])
+    source = abspath(next(it_args, join(curdir, 'help')))
+
     if not isdir(source):
         print(f'source folder not found: {source}')
         return 1

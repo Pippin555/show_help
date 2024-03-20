@@ -1,0 +1,1 @@
+.\venv\scripts\python.exe install_help.py ./help
