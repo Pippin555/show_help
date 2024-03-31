@@ -7,7 +7,6 @@ __author__ = 'Sihir'
 __copyright__ = '© Sihir 2024-2024 all rights reserved'
 
 import socket
-import time
 
 from typing import Optional
 from typing import Callable
@@ -34,8 +33,7 @@ class SocketClient:
             # print('Connected to server:', server_address)
             return client_socket
 
-        except socket.error as e:
-            # print('Error connecting to server:', e)
+        except socket.error as _:
             return None
 
     def communicate(self, message: str) -> Optional[str]:
@@ -134,7 +132,7 @@ class SocketServer:
                     print('inner loop')
                     # Set a timeout for receiving data
                     connection.settimeout(10)  # 10 seconds timeout (adjust as needed)
-                    answer = ''
+
                     # Receive data from the client
                     try:
                         data = connection.recv(1024)
