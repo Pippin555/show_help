@@ -31,8 +31,9 @@ class HelpViewer:
     def __init__(self, port: int = 4995):
         """ ... """
 
-        self.thread = Thread(target=self.socket_thread)
         self.server = SocketServer(port=port, callback=self.change_page, debug=True)
+        self.thread = Thread(target=self.socket_thread)
+        self.thread.start()
 
     def socket_thread(self):
         """ ... """
@@ -50,7 +51,10 @@ class HelpViewer:
         if file is not None:
             self.web_view.load(QUrl.fromLocalFile(file))
         self.web_view.show()
-        _exit(self.app.exec())
+        self.app.exec()
+        self.server.close()
+        self.thread.join()
+        _exit(0)
 
     def html_file(self, subject: str) -> Optional[str]:
         """ ... """

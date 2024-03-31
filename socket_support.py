@@ -94,39 +94,43 @@ class SocketServer:
         self._port = port
         self._callback = callback
         self._debug = debug
+        self._busy = False
+        self._server_socket = None
 
     def listen(self):
         """ listen to TCP messages on the configured port """
 
         connection = None
         # Create a TCP/IP socket
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Bind the socket to the address and port
         server_address = ('localhost', self._port)
-        server_socket.bind(server_address)
+        self._server_socket.bind(server_address)
+        self._busy = True
 
         # Listen for incoming connections
-        server_socket.listen(1)
+        self._server_socket.listen(1)
 
         if self._debug:
             print('Server is listening...')
 
-        busy = True
-        while busy:
+        while self._busy:
+            print('outer loop')
             # Wait for a connection
             try:
-                connection, client_address = server_socket.accept()
+                connection, client_address = self._server_socket.accept()
                 if self._debug:
                     print('Connection from', client_address)
 
             except socket.error as e:
-                if self._debug:
+                if self._debug and self._busy:
                     print('Error accepting connection:', e)
                 continue  # Continue listening for new connections
 
             try:
-                while busy:
+                while self._busy:
+                    print('inner loop')
                     # Set a timeout for receiving data
                     connection.settimeout(10)  # 10 seconds timeout (adjust as needed)
                     answer = ''
@@ -159,6 +163,13 @@ class SocketServer:
             # Close the connection
             print('server: close the connection')
             connection.close()
+
+    def close(self):
+        """ ... """
+
+        print('server.close()')
+        self._busy = False
+        self._server_socket.close()
 
     def check_message(self, message: str):
         """ check the message, get an answer from the callback """
