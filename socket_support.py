@@ -24,7 +24,7 @@ class SocketClient:
 
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Set a timeout for the connection attempt
-        # client_socket.settimeout(1)  # Timeout of 1 second
+        client_socket.settimeout(5)  # Timeout of 5 second
 
         # Connect the socket to the server address and port
         server_address = ('localhost', self._port)
@@ -34,11 +34,9 @@ class SocketClient:
             # print('Connected to server:', server_address)
             return client_socket
 
-        except socket.error as _:
+        except socket.error as e:
             # print('Error connecting to server:', e)
-            pass
-
-        return None
+            return None
 
     def communicate(self, message: str) -> Optional[str]:
         """ establish a socket connection and send a message, return the answer """
@@ -48,8 +46,7 @@ class SocketClient:
             client_socket = self.connect_to_server()
             if client_socket is None:
                 # Wait for a second before attempting to reconnect
-                time.sleep(1)
-                continue
+                return None
 
             try:
                 while outer:
@@ -116,10 +113,14 @@ class SocketServer:
             print('Server is listening...')
 
         while self._busy:
-            print('outer loop')
+
+            if self._debug:
+                print('outer loop')
+
             # Wait for a connection
             try:
                 connection, client_address = self._server_socket.accept()
+
                 if self._debug:
                     print('Connection from', client_address)
 
@@ -152,7 +153,8 @@ class SocketServer:
                         break  # Break out of the inner loop if no data is received
 
                     message = data.decode()
-                    busy, answer = self.check_message(message)
+                    print(message)
+                    self._busy, answer = self.check_message(message)
 
                     # Send a response back to the client
                     connection.sendall(answer.encode())
@@ -161,19 +163,24 @@ class SocketServer:
 
         if connection is not None:
             # Close the connection
-            print('server: close the connection')
+
+            if self._debug:
+                print('server: close the connection')
             connection.close()
 
     def close(self):
         """ ... """
 
-        print('server.close()')
+        if self._debug:
+            print('server.close()')
+
         self._busy = False
         self._server_socket.close()
 
     def check_message(self, message: str):
         """ check the message, get an answer from the callback """
 
+        print(message)
         busy = message != '[QUIT]'
         if busy:
             if message and self._callback:
