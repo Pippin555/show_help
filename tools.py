@@ -6,33 +6,9 @@
 __author__ = 'Sihir'  # noqa
 __copyright__ = '© Sihir 2023-2023 all rights reserved'  # noqa
 
-from sys import exit as _exit
-from sys import argv
-
-from os import listdir
-from os import curdir
-
-from os.path import abspath
-from os.path import isfile
-from os.path import join
 from os.path import splitext
-from os.path import basename
-from os.path import split
-
-from typing import Optional
 
 from re import compile as _compile
-
-from PySide6.QtWidgets import QApplication
-from PySide6.QtWidgets import QMainWindow
-from PySide6.QtWidgets import QListWidget
-from PySide6.QtWidgets import QGridLayout
-from PySide6.QtWidgets import QWidget
-from PySide6.QtWidgets import QListWidgetItem
-
-from PySide6.QtCore import QModelIndex
-
-from socket_support import SocketClient
 
 _title_expr = _compile(r'<title>(.*?)</title>')
 
