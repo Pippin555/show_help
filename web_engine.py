@@ -15,8 +15,6 @@ from os.path import abspath
 from os.path import isfile
 from os.path import join
 
-from time import sleep
-
 from threading import Thread
 
 from PySide6.QtWidgets import QApplication
@@ -24,10 +22,8 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtCore import QUrl
 from PySide6.QtCore import QRect
 from PySide6.QtCore import QObject
-from PySide6.QtCore import QThread
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
-from PySide6.QtCore import QTimer
 
 from socket_support import SocketServer
 from tools import get_title
@@ -56,7 +52,7 @@ class HelpViewer:
         self.app = QApplication(argv)
         self.web_view = QWebEngineView()
         self.web_view.closeEvent = self.window_closes
-        self.web_view.setGeometry(QRect(100, 100, 1200, 800))
+        self.web_view.setGeometry(QRect(100, 100, 1200, 800))  # noqa
         self.web_view.show()
 
     def run(self) -> int:
@@ -64,11 +60,6 @@ class HelpViewer:
 
         print('web_engine.run()')
         ret_code = self.app.exec()
-        # try:
-        #     self.web_view.close()
-        # except Exception as _:
-        #     print(str(MyException()))
-
         print(f'app.exec has exited ret_code is {ret_code}')
 
         return ret_code
@@ -117,7 +108,7 @@ class Worker(QObject):
     def __init__(self, port: int):
         """ ... """
 
-        super().__init__()
+        super().__init__(parent=None)
         self.port = port
         self.server = None
 
