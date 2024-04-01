@@ -70,7 +70,7 @@ class HelpClient:
         self.listbox = QListWidget()
         self.layout.addWidget(self.listbox)
         # Connect item selection signal to a custom slot
-        self.listbox.doubleClicked.connect(self.on_item_selected)
+        self.listbox.doubleClicked.connect(self.on_item_selected)  # noqa
         self.client = SocketClient(port=4995)
         self.main.show()
 
