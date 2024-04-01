@@ -17,6 +17,8 @@ from os.path import join
 
 from typing import Callable
 
+from jsons import loads
+
 from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtWidgets import QListWidget
@@ -80,7 +82,7 @@ class HelpClient:
             answer = self.client.communicate('[QUIT]')
             print(f'answer {answer}')
 
-    def populate(self, path: str):
+    def populate1(self, path: str):
         """ populate the list of help subjects """
 
         for file in listdir(path):
@@ -91,6 +93,24 @@ class HelpClient:
                 item.setData(0, subject)   # this is shown in the list
                 item.setData(1, filename)  # Storing filename as userData
                 self.listbox.addItem(item)
+
+    def populate(self, path: str):
+        """ populate from the _toc.json file """
+
+        with open(file=join(path, '_toc.json'), mode='r', encoding='utf8') as stream:
+            contents = stream.read()
+            data = loads(contents)
+            for info in data:
+                value = info.get('a_attr', None)
+                if value is not None:
+                    href = value.get('href', None)
+                    filename = join(path, href)
+                    subject = info.get('text', None)
+                    item = QListWidgetItem(filename)
+                    item.setData(0, subject)  # this is shown in the list
+                    item.setData(1, filename)  # Storing filename as userData
+                    self.listbox.addItem(item)
+            pass
 
     def on_item_selected(self, event: QModelIndex):
         """ ... """
@@ -120,8 +140,10 @@ class HelpClient:
 def main() -> int:
     """ main entry """
 
+    help_path = abspath(join(curdir, 'help'))
+
     _help = HelpClient()
-    _help.populate(abspath(join(curdir, 'help')))
+    _help.populate(path=help_path)
     _help.run()
     return 0
 
