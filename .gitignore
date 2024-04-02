@@ -1,6 +1,9 @@
 # Default ignored files
 /shelf/
 /.idea/
+/dist/
+/build/
 /help/
 /Help Sources/PianoScript.hnd-journal
 /Help Sources/PianoScript.lck
+help_server.exe

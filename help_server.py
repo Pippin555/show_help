@@ -89,7 +89,7 @@ class HelpViewer:
         """ ... """
 
         self.web_view.setWindowTitle(subject)
-        self.web_view.load(QUrl.fromLocalFile(filename))
+        self.web_view.load(QUrl.fromLocalFile(filename))  # noqa
 
     def on_message_received(self, filename: str) -> str:
         """ ... """
