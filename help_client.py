@@ -14,10 +14,15 @@ from os import curdir
 
 from os.path import abspath
 from os.path import join
+from os.path import isfile
 
 from typing import Callable
 
+from subprocess import Popen
+
 from jsons import loads
+
+from psutil import process_iter
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QMainWindow
@@ -137,9 +142,35 @@ class HelpClient:
         return self.app.exec()
 
 
+def check_and_start_process(proc: tuple[str, str]) -> bool:
+    """ try to find a process, else start it """
+
+    proc_name, proc_exe = proc
+
+    for process in process_iter():
+        if process.name() == proc_name:
+            # print(f'Process is running {proc_name}')
+            return True
+
+    if not isfile(proc_exe):
+        return False
+
+    try:
+        process = Popen(proc_exe)
+        # print(f"Started {proc_name} and running when poll() returns None")
+        return process.poll() is None
+
+    except FileNotFoundError:
+        print(f"Process {proc_name} no started")
+        return False
+
+
 def main() -> int:
     """ main entry """
 
+    server_tuple = ('help_server.exe', 'C:\\Users\\hsalo\\source\\repos\\Philip\\show_help\\help_server.exe')
+    if not check_and_start_process(server_tuple):
+        exit(1)
     help_path = abspath(join(curdir, 'help'))
 
     _help = HelpClient()

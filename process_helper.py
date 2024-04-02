@@ -1,12 +1,13 @@
 #! python3.12
 # coding: utf8
 
-""" connect to the server using sockets """
+""" list all processes or run help_server """
 
 __author__ = 'Sihir'
 __copyright__ = '© Sihir 2024-2024 all rights reserved'
 
 from sys import exit as _exit
+from sys import argv
 
 import psutil
 
@@ -28,27 +29,39 @@ def all_processes() -> None:
         print(key)
 
 
-def check_and_start_process(proc_name:str, proc_exe:str) -> bool:
+def check_and_start_process(proc_name: str, proc_exe: str) -> bool:
     """ try to find a process, else start it """
 
     for process in psutil.process_iter():
         if process.name() == proc_name:
-            print(f'Process is running {process_name}')
+            # print(f'Process is running {proc_name}')
             return True
 
     try:
-        subprocess.Popen(proc_exe)
-        print(f"Started {proc_name}")
-        return True
+        process = subprocess.Popen(proc_exe)
+        # print(f"Started {proc_name} and running when poll() returns None")
+        return process.poll() is None
+
     except FileNotFoundError:
-        print(f"Process {proc_name} not found.")
+        print(f"Process {proc_name} no started")
         return False
 
 
-if __name__ == '__main__':
-    # main entry
-    # all_processes()
+def main() -> int:
+    """ either list all processes or start help_server """
+
+    for arg in argv[1:]:
+        if arg == '-l':
+            all_processes()
+            return 0
 
     process_name = 'help_server.exe'
     process_exe = 'C:\\Users\\hsalo\\source\\repos\\Philip\\show_help\\help_server.exe'
     check_and_start_process(process_name, process_exe)
+    return 0
+
+
+if __name__ == '__main__':
+    # main entry
+
+    _exit(main())
